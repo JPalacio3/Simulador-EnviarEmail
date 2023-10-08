@@ -18,12 +18,7 @@ document.addEventListener('DOMContentLoaded',function () {
     btnReset.addEventListener('click',function (e) {
         e.preventDefault();
         // Reiniciar el objeto
-        email.email = '';
-        email.asunto = '';
-        email.mensaje = '';
-
-        formulario.reset();
-        comprobarEmail();
+        resetFormulario();
     })
 
     // Objeto que contiene los campos del formulario
@@ -31,6 +26,32 @@ document.addEventListener('DOMContentLoaded',function () {
         email: '',
         asunto: '',
         mensaje: ''
+    }
+
+    // Función que se encarga de realizar el envío de email
+    function enviarEmail(e) {
+        e.preventDefault();
+
+        spinner.classList.add('flex');
+        spinner.classList.remove('hidden')
+
+        setTimeout(() => {
+            spinner.classList.add('hidden');
+            spinner.classList.remove('flex');
+
+            // Reinciar el objeto
+            resetFormulario();
+
+            // Crear una alerta de envío
+            const alertaExito = document.createElement('P');
+            alertaExito.textContent = 'EL MENSAJE HA SIDO ENVIADO EXITOSAMENTE !'
+            alertaExito.classList.add('bg-green-500','text-white','p-2','text-center','rounded-lg','mt-10','font-bold','text-sm','uppercase');
+            formulario.appendChild(alertaExito);
+
+            setTimeout(() => {
+                alertaExito.remove();
+            },1200)
+        },2500)
     }
 
     function validar(e) {
@@ -100,24 +121,16 @@ document.addEventListener('DOMContentLoaded',function () {
         }
     }
 
-    // Función que se encarga de realizar el envío de email
-    function enviarEmail(e) {
-        e.preventDefault();
+    // Función encargada de hacer reset al formulario
+    function resetFormulario() {
+        // Reiniciar el objeto
+        email.email = '';
+        email.asunto = '';
+        email.mensaje = '';
 
-        spinner.classList.add('flex');
-        spinner.classList.remove('hidden')
-
-        setTimeout(() => {
-            spinner.classList.add('hidden');
-            spinner.classList.remove('flex');
-
-            // Reiniciar el objeto
-            email.email = '';
-            email.asunto = '';
-            email.mensaje = '';
-
-            formulario.reset();
-            comprobarEmail();
-        },2500)
+        formulario.reset();
+        comprobarEmail();
     }
+
+
 });
