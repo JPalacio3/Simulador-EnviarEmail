@@ -5,26 +5,43 @@ document.addEventListener('DOMContentLoaded',function () {
     const inputAsunto = document.querySelector('#asunto');
     const inputMensaje = document.querySelector('#mensaje');
     const formulario = document.querySelector('#formulario');
+    const btnSubmit = document.querySelector('#formulario button[type="submit"]');
 
     // Asignar eventos
-    inputEmail.addEventListener('blur',validar)
-    inputAsunto.addEventListener('blur',validar)
-    inputMensaje.addEventListener('blur',validar);
+    inputEmail.addEventListener('input',validar)
+    inputAsunto.addEventListener('input',validar)
+    inputMensaje.addEventListener('input',validar);
+
+    // Objeto que contiene los campos del formulario
+    const email = {
+        email: '',
+        asunto: '',
+        mensaje: ''
+    }
 
     function validar(e) {
         if (e.target.value.trim() === '') {
             mostrarAlerta(`El campo ${e.target.id} es obligatorio`,e.target.parentElement);
+            email[ e.target.name ] = '';
+            comprobarEmail();
             return;
         }
 
         // Validar que el email sea correcto
         if (e.target.id === 'email' && !validarEmail(e.target.value)) {
             mostrarAlerta('El Email NO es válido',e.target.parentElement);
+            email[ e.target.name ] = '';
+            comprobarEmail()
             return;
         }
 
         // En caso de pasar la validación se elimina la alerta
         limpiarAlerta(e.target.parentElement);
+
+        // Asignar los valores en el objeto
+        email[ e.target.name ] = e.target.value.trim().toLowerCase();
+        // Comprobar el objeto de email
+        comprobarEmail();
     }
 
     // Función para mostrar la alerta visual
@@ -55,4 +72,18 @@ document.addEventListener('DOMContentLoaded',function () {
         const resultado = regex.test(email);
         return resultado;
     }
+
+    // Función encargada de comprobar el arreglo creado a partir del objeto email
+    // y habilitar el botón de envío cuando el formulario esté correctamente diligenciado
+    function comprobarEmail() {
+        if (!Object.values(email).includes('')) {
+            btnSubmit.classList.remove('opacity-50');
+            btnSubmit.disabled = false;
+        } else {
+            btnSubmit.classList.add('opacity-50');
+            btnSubmit.disabled = true;
+            return;
+        }
+    }
+
 });
