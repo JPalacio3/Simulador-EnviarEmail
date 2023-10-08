@@ -8,13 +8,15 @@ document.addEventListener('DOMContentLoaded',function () {
     const btnSubmit = document.querySelector('#formulario button[type="submit"]');
     const btnReset = document.querySelector('#formulario button[type="reset"]');
     const spinner = document.querySelector('#spinner')
-
+    const cc = document.querySelector('#cc');
 
     // Asignar eventos
     inputEmail.addEventListener('input',validar)
     inputAsunto.addEventListener('input',validar)
     inputMensaje.addEventListener('input',validar);
+    cc.addEventListener('input',validarCC);
     formulario.addEventListener('submit',enviarEmail);
+
     btnReset.addEventListener('click',function (e) {
         e.preventDefault();
         // Reiniciar el objeto
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded',function () {
     // Objeto que contiene los campos del formulario
     const email = {
         email: '',
+        cc: null,
         asunto: '',
         mensaje: ''
     }
@@ -79,6 +82,23 @@ document.addEventListener('DOMContentLoaded',function () {
         comprobarEmail();
     }
 
+    // Función para validar el campo CC
+    function validarCC(e) {
+        // Validar que el email sea correcto
+        if (e.target.id === 'cc' && !validarEmail(e.target.value)) {
+            mostrarAlerta('El Email NO es válido',e.target.parentElement);
+            comprobarEmail();
+            return;
+        }
+        // En caso de pasar la validación se elimina la alerta
+        limpiarAlerta(e.target.parentElement);
+
+        // Asignar los valores en el objeto
+        email[ e.target.name ] = e.target.value.trim().toLowerCase();
+        // Comprobar el objeto de email
+        comprobarEmail();
+    }
+
     // Función para mostrar la alerta visual
     function mostrarAlerta(mensaje,referencia) {
         limpiarAlerta(referencia);
@@ -125,12 +145,12 @@ document.addEventListener('DOMContentLoaded',function () {
     function resetFormulario() {
         // Reiniciar el objeto
         email.email = '';
+        email.cc = null;
         email.asunto = '';
         email.mensaje = '';
-
         formulario.reset();
         comprobarEmail();
     }
 
-
+    console.log(email);
 });
